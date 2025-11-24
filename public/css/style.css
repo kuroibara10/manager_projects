@@ -3,10 +3,12 @@
 * {
   margin: 0;
   padding: 0;
+  font-weight: 600;
 }
 body {
   text-align: center;
 }
+/* Home Page */
 .home-page {
   gap: 30px;
   margin-top: 40px;
@@ -24,14 +26,55 @@ body {
   justify-content: center;
   gap: 50px;
 }
-.btns-home a {
+.btns {
   color: #000;
   background-color: #9484b2;
   padding: 15px;
   border-radius: 10%;
   text-decoration: none;
 }
-.btns-home a:hover {
+.btns:hover {
   color: #fff;
   background-color: #432c74;
+}
+
+/* Login & Sing up */
+.singUp-page {
+  margin-top: 20px;
+}
+.img-singUp {
+  width: 300px;
+}
+.form-rl {
+  margin-top: 20px;
+}
+.form-rl div {
+  margin-top: 15px;
+  text-align: left;
+  margin-left: 450px;
+}
+.form-rl div label {
+  display: block;
+  font-weight: 600;
+}
+.form-rl div input {
+  width: 500px;
+  padding: 10px;
+}
+.form-rl div input:hover {
+  border: 1px solid #9484b2;
+  box-shadow: #9484b2 0px 34px 35px, #9484b2 0px -12px 30px, #9484b2 0px 4px 6px,
+    #9484b2 0px 12px 13px, #9484b2 0px -3px 5px;
+}
+
+.form-rl .btns {
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.form-rl p a {
+  text-decoration: none;
+}
+.form-rl p a:hover {
+  text-decoration: underline;
 }

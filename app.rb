@@ -13,3 +13,27 @@ get '/' do
     halt 500, "Failed to load users: #{e.message}"
   end
 end
+get '/sing_up' do
+  content_type :html
+  begin
+    erb :sing_up
+  rescue => e
+    halt 500, "Failed to load users: #{e.message}"
+  end
+end
+get '/sing_up' do
+  content_type :html
+  begin
+    erb :sing_up
+  rescue => e
+    halt 500, "Failed to load users: #{e.message}"
+  end
+end
+get '/login' do
+  content_type :html
+  begin
+    erb :login
+  rescue => e
+    halt 500, "Failed to load users: #{e.message}"
+  end
+end
