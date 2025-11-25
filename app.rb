@@ -37,3 +37,11 @@ get '/login' do
     halt 500, "Failed to load users: #{e.message}"
   end
 end
+get '/users/home' do
+  content_type :html
+  begin
+    erb :"users/home"
+  rescue => e
+    halt 500, "Failed to load users: #{e.message}"
+  end
+end

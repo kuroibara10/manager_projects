@@ -14,3 +14,7 @@ ruby app.rb
 ```
 
 Then in your search browser : http://localhost:8080/
+
+## Team
+
+Created by Abdillah Bara
