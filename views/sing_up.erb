@@ -15,33 +15,37 @@
     <div class="singUp-page">
         <a href="/"><img src="assests/logo.png" alt="COLLABORATE" class="img-singUp"/></a>
         <h1 class="head-home">Sing up</h1>
-        <% if @message %>
-          <% if @type == "success" %>
-            <%# <div style="padding: 10px; background: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 15px;"> %>
-            <div style="color: #155724;">
-              <%= @message %>
+        <% if session[:message] %>
+            <div id="alert-message" style="padding: 10px; border-radius:5px; margin-bottom:10px; margin-top:10px;  
+                <% if session[:type] == 'success' %>background-color:#d4edda; color:#155724;<% else %>background-color:#f8d7da; color:#721c24;<% end %>">
+                <%= session[:message] %>
             </div>
-          <% else %>
-            <%# <div style="padding: 10px; background: #f8d7da; color: #721c24; border-radius: 5px; margin-bottom: 15px;"> %>
-            <div style="color: #721c24;">
-              <%= @message %>
-            </div>
-          <% end %>
+
+            <% session[:message] = nil %>
+            
+            <script>
+                setTimeout(function() {
+                var alertDiv = document.getElementById("alert-message");
+                if (alertDiv) {
+                    alertDiv.style.display = "none";
+                }
+                }, 3000);
+            </script>
         <% end %>
         <form action="/sing_up" class="form-rl" method="POST">
-            <div id="lable-name">
+            <div class="lable_i">
                 <label for="username">Username</label>
                 <input name="username" type="text" required/>
             </div>
-            <div id="lable-email">
+            <div class="lable_i">
                 <label for="email">Email</label>
                 <input name="email" type="email" required/>
             </div>
-            <div id="lable-password">
+            <div class="lable_i">
                 <label for="password">Password</label>
                 <input name="password" type="password" required/>
             </div>
-            <div id="lable-password-conf">
+            <div class="lable_i">
                 <label for="password_conf">Password confirmation</label>
                 <input name="password_conf" type="password" required/>
             </div>

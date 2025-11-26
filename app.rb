@@ -71,8 +71,8 @@ post "/sing_up" do
   password_conf = params[:password_conf]
   if(password != password_conf)
     begin
-      @message = "Please ensure both passwords are the same"
-      @type = "error"
+      session[:message] = "Please ensure both passwords are the same"
+      session[:type] = "error"
       return erb :sing_up
     end
   end
@@ -82,13 +82,13 @@ post "/sing_up" do
       "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
       [username, email, hashed_password]
     )
-    @message = "User created successfully!"
-    @type = "success"
+    session[:message] = "User created successfully!"
+    session[:type] = "success"
 
     erb :sing_up
   rescue SQLite3::ConstraintException
-    @message = "Email already exists!"
-    @type = "error"
+    session[:message] = "Email already exists!"
+    session[:type] = "error"
 
     erb :sing_up
   end
@@ -101,14 +101,16 @@ post "/login" do
   user = DB.execute("SELECT * FROM users WHERE email = ?", [email]).first
 
   if user.nil?
-    @message = "Email not found!"
+    session[:message] = "Email not found!"
+    session[:type] = "error"
     return erb :login
   end
   if BCrypt::Password.new(user["password"]) == password
     session[:user_id] = user["id"]
     redirect "/users/home"
   else
-    @message = "Incorrect password!"
+    session[:message] = "Incorrect password!"
+    session[:type] = "error"
     erb :login
   end
 end
