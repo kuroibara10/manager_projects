@@ -115,3 +115,27 @@ get "/logout" do
   session.clear
   redirect "/login"
 end
+
+# New Project
+post "/project" do
+  name = params[:name]
+  discription = params[:discription]
+  begin
+    DB.execute(
+      "INSERT INTO users (name, discription, members) VALUES (?, ?, ?)",
+      [name, discription, 1]
+    )
+    user = DB.execute("SELECT * FROM name WHERE email = ?", [email]).first
+
+    @message = "Project created successfully!"
+    @type = "success"
+
+
+    erb :sing_up
+  rescue SQLite3::ConstraintException
+    @message = "Project Eroor!"
+    @type = "error"
+
+    erb :sing_up
+  end
+end
