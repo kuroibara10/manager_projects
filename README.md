@@ -8,6 +8,7 @@
 4 - Chek in terminal version sintara : gem list sinatra
 5 - Dtabases -> Install Sqlite3 : gem install sqlite3 --platform ruby
 6 - Chek in terminal version sqlite3: sqlite3 --version
+7 - To Encrypting passwords using bcrypt : gem install bcrypt & gem install bcrypt --platform=ruby
 
 ## Usage
 

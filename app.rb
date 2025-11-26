@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'sqlite3'
+require 'bcrypt'
 
 
 set :bind, '0.0.0.0'
@@ -59,4 +60,58 @@ get '/users/home' do
   rescue => e
     halt 500, "Failed to load users: #{e.message}"
   end
+end
+
+# New user
+post "/sing_up" do
+  username = params[:username]
+  email = params[:email]
+  password = params[:password]
+  password_conf = params[:password_conf]
+  if(password != password_conf)
+    begin
+      @message = "Please ensure both passwords are the same"
+      @type = "error"
+      return erb :sing_up
+    end
+  end
+  hashed_password = BCrypt::Password.create(password)
+  begin
+    DB.execute(
+      "INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
+      [username, email, hashed_password]
+    )
+    @message = "User created successfully!"
+    @type = "success"
+
+    erb :sing_up
+  rescue SQLite3::ConstraintException
+    @message = "Email already exists!"
+    @type = "error"
+
+    erb :sing_up
+  end
+end
+
+# Get user
+post "/login" do
+  email = params[:email]
+  password = params[:password]
+  user = DB.execute("SELECT * FROM users WHERE email = ?", [email]).first
+  if user.nil?
+    @message = "Email not found!"
+    return erb :login
+  end
+  if BCrypt::Password.new(user["password"]) == password
+    session[:user_id] = user["id"]
+    redirect "/users/home"
+  else
+    @message = "Incorrect password!"
+    erb :login
+  end
+end
+# Log out
+get "/logout" do
+  session.clear
+  redirect "/login"
 end
