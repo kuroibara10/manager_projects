@@ -125,7 +125,7 @@ post "/project" do
   email = params[:eamil]
   begin
     DB.execute(
-      "INSERT INTO users (name, discription, eamil) VALUES (?, ?, ?)",
+      "INSERT INTO projects (name, discription, eamil) VALUES (?, ?, ?)",
       [name, discription, eamil]
     )
 
@@ -139,5 +139,23 @@ post "/project" do
     @type = "error"
 
     erb :sing_up
+  end
+end
+
+# Delete Project
+delete "/users/home/:id" do
+  id = params[:id]
+  begin
+    name_pro = DB.execute("SELECT name FROM projects WHERE id = ?", [id])
+    name_p = name_pro[0]["name"]
+    DB.execute("DELETE FROM projects WHERE id = ?", [id])
+    session[:message] = "Project #{name_p} deleted successfully!"
+    session[:type] = "success"
+    redirect "/users/home"
+  rescue => e
+    status 500
+    session[:message] = "Error deleting project: #{e.message}"
+    session[:type] = "error"
+    redirect "/users/home"
   end
 end

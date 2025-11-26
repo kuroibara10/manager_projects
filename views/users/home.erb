@@ -94,6 +94,23 @@
             </ul>
         </div>
         <h1 class="head-home">Projects</h1>
+        <% if session[:message] %>
+            <div id="alert-message" style="padding: 10px; border-radius:5px; margin-bottom:10px; margin-top:10px;  
+                <% if session[:type] == 'success' %>background-color:#d4edda; color:#155724;<% else %>background-color:#f8d7da; color:#721c24;<% end %>">
+                <%= session[:message] %>
+            </div>
+
+            <% session[:message] = nil %>
+            
+            <script>
+                setTimeout(function() {
+                var alertDiv = document.getElementById("alert-message");
+                if (alertDiv) {
+                    alertDiv.style.display = "none";
+                }
+                }, 3000);
+            </script>
+        <% end %>
         <div class="projects">
             <div>
                 <h3><i class="fa-solid fa-atom"></i> All Projects</h3>
@@ -115,8 +132,12 @@
                                     <i class="fa-solid fa-users"></i><p><%= project["members_users"] %></p>
                                     <i class="fa-regular fa-comments"></i><p><%= project["nb_discussion"] %></p>
                                 </div>
-                                <form>
-                                    <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
+                                <form action="/users/home/<%= project["id"] %>" method="POST">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <%# <form action="/delete_p" method="POST"> %>
+                                    <button type="submit" style="cursor:pointer;">
+                                        <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
+                                    </button>
                                 </form>
                             </div>
                         </div>
