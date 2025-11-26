@@ -13,11 +13,10 @@ DB.execute <<-SQL
   CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
+    email TEXT,
     discription TEXT,
     members_users INTEGER DEFAULT 1,
-    nb_discussion INTEGER DEFAULT 0,
-    user_id INTEGER,
-    FOREIGN KEY(user_id) REFERENCES users(id)
+    nb_discussion INTEGER DEFAULT 0
   );
 SQL
 DB.execute <<-SQL

@@ -97,7 +97,35 @@
         <div class="projects">
             <div>
                 <h3><i class="fa-solid fa-atom"></i> All Projects</h3>
-                <div class="project" style="text-align: left;">
+                <% if @projects && @projects.any? %>
+                    <% @projects.each do |project| %>
+                        <div class="project" style="text-align: left;">
+                            <div class="tiltelpp">
+                                <div>
+                                    <h2><%= project["name"] %></h2>
+                                    <i class="fa-solid fa-gear"></i>
+                                </div>
+                                <p><i class="fa-solid fa-pen-clip"></i><%= project["email"] %></p>
+                            </div>
+                            <div style="padding: 10px;">
+                                <%= project["discription"] %>
+                            </div>
+                            <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
+                                <div style="display: flex;flex-direction: row; justify-content: space-between;">
+                                    <i class="fa-solid fa-users"></i><p><%= project["members_users"] %></p>
+                                    <i class="fa-regular fa-comments"></i><p><%= project["nb_discussion"] %></p>
+                                </div>
+                                <form>
+                                    <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
+                                </form>
+                            </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <p>No Projects found.</p>
+                <% end %>
+
+                <%# <div class="project" style="text-align: left;">
                     <div class="tiltelpp">
                         <div>
                             <h2>title project</h2>
@@ -117,7 +145,7 @@
                             <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
                         </form>
                     </div>
-                </div>
+                </div> %>
             </div>
             <div>
                 <h3><i class="fa-solid fa-plus"></i> Created by me</h3>
@@ -169,5 +197,6 @@
             </div>
         </div>
     </div>
+    <footer style="padding: 30px; background: #432c74; color: #fff; margin-top: 15px;">Created by Abdillah bara & Mohamed achouad</footer>
   </body>
 </html>

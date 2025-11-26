@@ -56,6 +56,7 @@ end
 get '/users/home' do
   content_type :html
   begin
+    @projects = DB.execute("SELECT * FROM projects")
     erb :"users/home"
   rescue => e
     halt 500, "Failed to load users: #{e.message}"
@@ -98,6 +99,7 @@ post "/login" do
   email = params[:email]
   password = params[:password]
   user = DB.execute("SELECT * FROM users WHERE email = ?", [email]).first
+
   if user.nil?
     @message = "Email not found!"
     return erb :login
@@ -120,12 +122,12 @@ end
 post "/project" do
   name = params[:name]
   discription = params[:discription]
+  email = params[:eamil]
   begin
     DB.execute(
-      "INSERT INTO users (name, discription, members) VALUES (?, ?, ?)",
-      [name, discription, 1]
+      "INSERT INTO users (name, discription, eamil) VALUES (?, ?, ?)",
+      [name, discription, eamil]
     )
-    user = DB.execute("SELECT * FROM name WHERE email = ?", [email]).first
 
     @message = "Project created successfully!"
     @type = "success"
