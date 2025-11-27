@@ -29,7 +29,12 @@
                 <p><%= @project["description"] %></p>
                 <div class="members">
                     <span class="title_part">Members : <%= @project["members_users"] %></span>
-                    <span class="name_member"><i class="fa-solid fa-pen-clip"></i>test@gmail.com</span>
+                    <div>
+                        <% @members.each do |member| %>
+                            <span class="name_member"><i class="fa-solid fa-pen-clip"></i><%= member["email"] %></span>
+                        <% end %>
+                    </div>
+
                 </div>
                 <div class="topics">
                     <span class="title_part">Add new disscussion :</span>

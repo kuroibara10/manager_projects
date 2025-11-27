@@ -37,12 +37,12 @@ DB.execute <<-SQL
     FOREIGN KEY(project_id) REFERENCES projects(id)
   );
 SQL
+# DB.execute("DROP TABLE IF EXISTS project_collaborations")
 DB.execute <<-SQL
 CREATE TABLE IF NOT EXISTS project_collaborations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     project_id INTEGER,
-    user_id INTEGER,
-    FOREIGN KEY(project_id) REFERENCES projects(id),
-    FOREIGN KEY(user_id) REFERENCES users(id)
+    email TEXT,
+    FOREIGN KEY(project_id) REFERENCES projects(id)
 );
 SQL

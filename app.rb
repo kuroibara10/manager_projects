@@ -68,6 +68,7 @@ get '/project' do
   id = params[:projectId]
   @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
   @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ?",[id])
+  @members = DB.execute("SELECT * FROM project_collaborations WHERE project_id = ?",[id])
   begin
     erb :"users/project"
   rescue => e
@@ -87,7 +88,6 @@ end
 get '/projects/edit' do
   id = params[:projectId]
   @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
-
   if @project.nil?
     halt 404, "Project #{id} not found"
   end
@@ -162,6 +162,11 @@ post "/project/add" do
     DB.execute(
       "INSERT INTO projects (name, discription, email) VALUES (?, ?, ?)",
       [name, discription, email]
+    )
+    project_id = DB.last_insert_row_id
+    DB.execute(
+      "INSERT INTO project_collaborations (project_id, email) VALUES (?, ?)",
+      [project_id, email]
     )
     session[:message] = "Project #{name} created successfully!"
     session[:type] = "success"
