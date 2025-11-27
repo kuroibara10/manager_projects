@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Projects</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="shortcut icon" href="assests/logo.png" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/0aeaede015.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/"><img src="/assests/logo.png" alt="COLLABORATE" class="img-header" /></a>
+        <ul>
+            <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-plus"></i></i><a href="/users/home" style="text-decoration: none;style="color: #9484b2;">Home</a></li>
+            <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-right-from-bracket"></i><a href="/logout" style="text-decoration: none;style="color: #9484b2;">Log Out</a></li>
+        </ul>
+    </div>
+    <div class="container_grid">
+        <% if @project %>
+        <div class="content">
+            <div class="main_title">
+                <h1><%= @project["name"] %></h1>
+                <span>Created by <%= @project["email"] %></span>
+            </div>
+            <div class="main_content">
+                <p><%= @project["description"] %></p>
+                <div class="members">
+                    <span class="title_part">Members : <%= @project["members_users"] %></span>
+                    <span class="name_member"><i class="fa-solid fa-pen-clip"></i>test@gmail.com</span>
+                </div>
+                <div class="topics">
+                    <span class="title_part">Add new disscussion :</span>
+                    <form action="" class="form_newProject">
+                        <input type="text" name="" id="">
+                        <button type="submit" class="button_one"><i class="fa-solid fa-circle-plus"></i>New discussion</button>
+                    </form>
+                    <div class="discussion">
+                        <div class="head_part">
+                            <span>discussion</span>
+                            <div class="icons">
+                                <i class="fa-solid fa-gear"></i>
+                                <i class="fa-solid fa-trash-can"></i>
+                            </div>
+                        </div>
+                        <div class="main_discussion">
+                            <i class="fa-solid fa-comments"></i>
+                            <div class="info_message">
+                                <div class="email">tets@gmail.com</div>
+                                <span>Good!</span>
+                            </div>
+                            <i class="fa-solid fa-pen-clip"></i>
+                        </div>
+                        <form action="" class="form_newProject">
+                            <input type="text" name="" id="">
+                            <button type="submit" class="button_one">Send</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="task">
+                    <span class="title_part">Add new task :</span>
+                    <form action="/task/add" class="form_newProject" method="POST">
+                        <input name="project_id" type="hidden" value="<%= @project["id"] %>"/>
+                        <input name="email" type="hidden" value="<%= @project["email"]%>"/>
+                        <input type="text" name="task" id="task">
+                        <button type="submit" class="button_one"><i class="fa-solid fa-circle-plus"></i>New task</button>
+                    </form>
+                    <div>
+                        <% @tasks.each do |task| %>
+                            <p><%= task["task"] %></p>
+                        <% end %>
+                    </div>
+                </div>
+                <div class="attachmen">
+                    <span class="title_part">Add attachments :</span>
+                    <form action="">
+                        <input type="file" name="" id="">
+                        <button type="submit" class="button_one"><i class="fa-solid fa-file-circle-plus"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <form action="/projects/edit" method="GET">
+                <input type="hidden" name="projectId" value="<%= @project["id"] %>">
+            <button type="submit" class="button_one"><i class="fa-solid fa-gear"></i>Edit Project</button>
+            </form>
+            <button type="submit" class="button_one"><i class="fa-solid fa-users"></i>Members</button>
+            <button type="submit" class="button_one"><i class="fa-solid fa-comments"></i>Topics</button>
+            <button type="submit" class="button_one"><i class="fa-solid fa-tasks"></i>Tasks</button>
+            <button type="submit" class="button_one"><i class="fa-solid fa-paperclip"></i>Attachments</button>
+        </div>
+        <% else %>
+            <p style="color:red;">Project not found</p>
+        <% end %>
+    </div>
+</body>
+
+</html>

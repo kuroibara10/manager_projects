@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Projects</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="shortcut icon" href="assests/logo.png" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/0aeaede015.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/"><img src="/assests/logo.png" alt="COLLABORATE" class="img-header" /></a>
+        <ul>
+            <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-plus"></i></i><a href="/users/home" style="text-decoration: none;style="color: #9484b2;">Home</a></li>
+            <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-right-from-bracket"></i><a href="/logout" style="text-decoration: none;style="color: #9484b2;">Log Out</a></li>
+        </ul>
+    </div>
+    <div class="container">
+        <h1>New Project</h1>
+        <form action="/project/add" method="POST">
+            <input name="email" type="hidden" value="<%= session[:email] %>"/>
+            <div id="lable-name">
+                <label for="name">Name</label>
+                <input name="name" type="name" />
+            </div>
+            <div id="lable-description">
+                <label for="description">Description</label>
+                <textarea name="discription" id="desc"></textarea>
+            </div>
+            <button type="submit" class="button_two">Create Project</button>
+        </form>
+    </div>
+</body>
+
+</html>

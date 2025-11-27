@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Projects</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="shortcut icon" href="assests/logo.png" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/0aeaede015.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="header">
+        <a href="/"><img src="/assests/logo.png" alt="COLLABORATE" class="img-header" /></a>
+        <ul>
+            <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-plus"></i></i><a href="/users/home" style="text-decoration: none;style="color: #9484b2;">Home</a></li>
+            <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-right-from-bracket"></i><a href="/logout" style="text-decoration: none;style="color: #9484b2;">Log Out</a></li>
+        </ul>
+    </div>
+    <div class="container_grid">
+        <% if @project %>
+        <div class="content">
+            <div class="main_title">
+                <h1><%= @project["name"] %></h1>
+                <span><%= @project["email"] %></span>
+            </div>
+            <div class="main_content edit_page">
+                <span class="title_part">Name :</span>
+                <form action="" class="form_newProject">
+                    <input type="text" name="" id="" value="<%= @project["name"] %>">
+                    <button type="submit" class="button_two">Update Name</button>
+                </form>
+                <span class="title_part">Description :</span>
+                <form action="" class="form_newProject">
+                    <textarea name="Update_description" id=""><%= @project["discription"] %></textarea>
+                    <button type="submit" class="button_two">Update Description</button>
+                </form>
+                <div class="membership">
+                    <span class="title_part">Add member (email) :</span>
+                    <div class="form_addmember">
+                        <input type="text" name="email" id="">
+                        <label class="toggle">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                            <span class="toggle-label">Admin</span>
+                        </label>
+                        <button type="submit" class="button_one"><i class="fa-solid fa-user-plus"></i></button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+        <div class="sidebar">
+            <form action="/project" method="GET">
+                <input type="hidden" name="projectId" value="<%= @project["id"] %>">
+                <button type="submit" class="button_one"><i class="fa-solid fa-gear"></i>Project Overview</button>
+            </form>
+            <form action="/users/home/<%= @project["id"] %>" method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="button_one"><i class="fa-solid fa-users"></i>Delet Project</button>
+            </form>
+        </div>
+        <% else %>
+            <p style="color:red;">Project not found</p>
+        <% end %>
+    </div>
+</body>
+</html>

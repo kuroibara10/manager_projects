@@ -88,9 +88,8 @@
         <div class="header">
             <a href="/"><img src="/assests/logo.png" alt="COLLABORATE" class="img-header"/></a>
             <ul>
-                <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-plus"></i></i> Add Project</li>
-                <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-gear"></i> Edit Project</li>
-                <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-right-from-bracket"></i><a href="/logout" style="text-decoration: none;style="color: #9484b2;">Log Out</a></li>
+                <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-plus"></i></i><a href="/projects/add" style="text-decoration: none; color: #9484b2;">Add Project</a></li>
+                <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-right-from-bracket"></i><a href="/logout" style="text-decoration: none; color: #9484b2;">Log Out</a></li>
             </ul>
         </div>
         <h1 class="head-home">Projects</h1>
@@ -120,7 +119,36 @@
                             <div class="tiltelpp">
                                 <div>
                                     <h2><%= project["name"] %></h2>
-                                    <i class="fa-solid fa-gear"></i>
+                                </div>
+                                <p><i class="fa-solid fa-pen-clip"></i><%= project["email"] %></p>
+                            </div>
+                            <div style="padding: 10px;">
+                                <%= project["discription"] %>
+                            </div>
+                            <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
+                                <div style="display: flex;flex-direction: row; justify-content: space-between;">
+                                    <i class="fa-solid fa-users"></i><p><%= project["members_users"] %></p>
+                                    <i class="fa-regular fa-comments"></i><p><%= project["nb_discussion"] %></p>
+                                </div>
+                            </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <p>No Projects found.</p>
+                <% end %>
+            </div>
+            <div>
+                <h3><i class="fa-solid fa-plus"></i> Created by me</h3>
+                <% if @projects && @projects.any? %>
+                    <% @projects.each do |project| %>
+                        <div class="project" style="text-align: left;">
+                            <div class="tiltelpp">
+                                <div>
+                                    <h2><%= project["name"] %></h2>
+                                    <form action="/project" method="GET">
+                                        <input type="hidden" name="projectId" value="<%= project["id"] %>">
+                                        <button type="submit" style="border:none; background-color:#000; cursor:pointer" ><i class="fa-solid fa-gear" style="color: #fff;font-size:20px" ></i></button>
+                                    </form>
                                 </div>
                                 <p><i class="fa-solid fa-pen-clip"></i><%= project["email"] %></p>
                             </div>
@@ -133,8 +161,7 @@
                                     <i class="fa-regular fa-comments"></i><p><%= project["nb_discussion"] %></p>
                                 </div>
                                 <form action="/users/home/<%= project["id"] %>" method="POST">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <%# <form action="/delete_p" method="POST"> %>
+                                    <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" style="cursor:pointer;">
                                         <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
                                     </button>
@@ -145,76 +172,33 @@
                 <% else %>
                     <p>No Projects found.</p>
                 <% end %>
-
-                <%# <div class="project" style="text-align: left;">
-                    <div class="tiltelpp">
-                        <div>
-                            <h2>title project</h2>
-                            <i class="fa-solid fa-gear"></i>
-                        </div>
-                        <p><i class="fa-solid fa-pen-clip"></i> email@gmail.com</p>
-                    </div>
-                    <div style="padding: 10px;">
-                        Discription
-                    </div>
-                    <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
-                        <div style="display: flex;flex-direction: row; justify-content: space-between;">
-                            <i class="fa-solid fa-users"></i><p>1</p>
-                            <i class="fa-regular fa-comments"></i><p>0</p>
-                        </div>
-                        <form>
-                            <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
-                        </form>
-                    </div>
-                </div> %>
-            </div>
-            <div>
-                <h3><i class="fa-solid fa-plus"></i> Created by me</h3>
-                <div class="project" style="text-align: left;">
-                    <div class="tiltelpp">
-                        <div>
-                            <h2>title project</h2>
-                            <i class="fa-solid fa-gear"></i>
-                        </div>
-                        <p><i class="fa-solid fa-pen-clip"></i> email@gmail.com</p>
-                    </div>
-                    <div style="padding: 10px;">
-                        Discription
-                    </div>
-                    <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
-                        <div style="display: flex;flex-direction: row; justify-content: space-between;">
-                            <i class="fa-solid fa-users"></i><p>1</p>
-                            <i class="fa-regular fa-comments"></i><p>0</p>
-                        </div>
-                        <form>
-                            <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
-                        </form>
-                    </div>
-                </div>
             </div>
             <div>
                 <h3><i class="fa-solid fa-users"></i> Shared with me</h3>
-                <div class="project" style="text-align: left;">
-                    <div class="tiltelpp">
-                        <div>
-                            <h2>title project</h2>
-                            <i class="fa-solid fa-gear"></i>
+                <% if @projects && @projects.any? %>
+                    <% @projects.each do |project| %>
+                        <div class="project" style="text-align: left;">
+                            <div class="tiltelpp">
+                                <div>
+                                    <h2><%= project["name"] %></h2>
+                                    <i class="fa-solid fa-gear"></i>
+                                </div>
+                                <p><i class="fa-solid fa-pen-clip"></i><%= project["email"] %></p>
+                            </div>
+                            <div style="padding: 10px;">
+                                <%= project["discription"] %>
+                            </div>
+                            <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
+                                <div style="display: flex;flex-direction: row; justify-content: space-between;">
+                                    <i class="fa-solid fa-users"></i><p><%= project["members_users"] %></p>
+                                    <i class="fa-regular fa-comments"></i><p><%= project["nb_discussion"] %></p>
+                                </div>
+                            </div>
                         </div>
-                        <p><i class="fa-solid fa-pen-clip"></i> email@gmail.com</p>
-                    </div>
-                    <div style="padding: 10px;">
-                        Discription
-                    </div>
-                    <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
-                        <div style="display: flex;flex-direction: row; justify-content: space-between;">
-                            <i class="fa-solid fa-users"></i><p>1</p>
-                            <i class="fa-regular fa-comments"></i><p>0</p>
-                        </div>
-                        <form>
-                            <i class="fa-regular fa-trash-can" style="background-color: red;padding: 5px;border-radius: 10%;"></i>
-                        </form>
-                    </div>
-                </div>
+                    <% end %>
+                <% else %>
+                    <p>No Projects found.</p>
+                <% end %>
             </div>
         </div>
     </div>

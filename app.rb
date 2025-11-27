@@ -63,6 +63,38 @@ get '/users/home' do
   end
 end
 
+get '/project' do
+  content_type :html
+  id = params[:projectId]
+  @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
+  @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ?",[id])
+  begin
+    erb :"users/project"
+  rescue => e
+    halt 500, "Failed to load users: #{e.message}"
+  end
+end
+get '/projects/add' do
+  content_type :html
+  begin
+    @projects = DB.execute("SELECT * FROM projects")
+    erb :"users/add_project"
+  rescue => e
+    halt 500, "Failed to load users: #{e.message}"
+  end
+end
+
+get '/projects/edit' do
+  id = params[:projectId]
+  @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
+
+  if @project.nil?
+    halt 404, "Project #{id} not found"
+  end
+
+  erb :"users/edit_project"
+end
+
 # New user
 post "/sing_up" do
   username = params[:username]
@@ -107,6 +139,7 @@ post "/login" do
   end
   if BCrypt::Password.new(user["password"]) == password
     session[:user_id] = user["id"]
+    session[:email] = user["email"]
     redirect "/users/home"
   else
     session[:message] = "Incorrect password!"
@@ -121,17 +154,36 @@ get "/logout" do
 end
 
 # New Project
-post "/project" do
+post "/project/add" do
   name = params[:name]
   discription = params[:discription]
-  email = params[:eamil]
+  email = params[:email]
   begin
     DB.execute(
-      "INSERT INTO projects (name, discription, eamil) VALUES (?, ?, ?)",
-      [name, discription, eamil]
+      "INSERT INTO projects (name, discription, email) VALUES (?, ?, ?)",
+      [name, discription, email]
     )
+    session[:message] = "Project #{name} created successfully!"
+    session[:type] = "success"
+    redirect "/users/home"
+  rescue SQLite3::ConstraintException
+    session[:message] = "Error create project: #{e.message}"
+    session[:type] = "error"
+    redirect "/users/home"
+  end
+end
 
-    @message = "Project created successfully!"
+# Update Project
+put "/project/:id" do
+  id = params[:id]
+  name = params[:name]
+  discription = params[:discription]
+  begin
+    DB.execute(
+      "UPDATE projects SET name = ?, description = ? WHERE id = ?",
+      [name, description, id]
+    )
+    @message = "Project update successfully!"
     @type = "success"
 
 
@@ -157,6 +209,68 @@ delete "/users/home/:id" do
   rescue => e
     status 500
     session[:message] = "Error deleting project: #{e.message}"
+    session[:type] = "error"
+    redirect "/users/home"
+  end
+end
+
+
+# New Task
+post "/task/add" do
+  task = params[:task]
+  project_id = params[:project_id]
+  email = params[:email]
+  begin
+    DB.execute(
+      "INSERT INTO tasks (task, email, project_id) VALUES (?, ?, ?)",
+      [task, email, project_id]
+    )
+    session[:message] = "Task created successfully!"
+    session[:type] = "success"
+    redirect "/users/home"
+  rescue SQLite3::ConstraintException
+    session[:message] = "Error create Task: #{e.message}"
+    session[:type] = "error"
+    redirect "/users/home"
+  end
+end
+
+
+# Update Project
+put "/project/task/:id" do
+  id = params[:id]
+  task = params[:name]
+  begin
+    DB.execute(
+      "UPDATE tasks SET task = ? WHERE id = ?",
+      [task, id]
+    )
+    @message = "Task update successfully!"
+    @type = "success"
+
+
+    erb :sing_up
+  rescue SQLite3::ConstraintException
+    @message = "Task Eroor!"
+    @type = "error"
+
+    erb :sing_up
+  end
+end
+
+# Delete Task
+delete "/project/task/:id" do
+  id = params[:id]
+  begin
+    name_task = DB.execute("SELECT task FROM tasks WHERE id = ?", [id])
+    name_t = name_task[0]["name"]
+    DB.execute("DELETE FROM tasks WHERE id = ?", [id])
+    session[:message] = "Task #{name_p} deleted successfully!"
+    session[:type] = "success"
+    redirect "/users/home"
+  rescue => e
+    status 500
+    session[:message] = "Error deleting task: #{e.message}"
     session[:type] = "error"
     redirect "/users/home"
   end

@@ -10,7 +10,13 @@ body {
 }
 /* Home Page */
 .home-page {
-  gap: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  align-content: center;
+  /* gap: 30px; */
   margin-top: 40px;
   font-family: "Roboto", sans-serif;
 }
@@ -39,8 +45,26 @@ body {
 }
 
 /* Login & Sing up */
+/* .singUp-page {
+  margin-top: 20px;
+} */
 .singUp-page {
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  align-content: center;
+}
+.login-page {
+  margin-top: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  align-content: center;
 }
 .img-singUp {
   width: 300px;
@@ -90,3 +114,309 @@ body {
 .form-rl p a:hover {
   text-decoration: underline;
 }
+
+/* Start style header of user page */
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.header ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+li {
+  cursor: pointer;
+}
+
+.img-header {
+  width: 50px;
+  height: 50px;
+}
+
+/* End style user page */
+
+/* Start style Project Page */
+.container_grid {
+  display: grid;
+  grid-template-columns: 8fr 2fr;
+  gap: 20px;
+  margin: 20px;
+  padding: 0 40px;
+}
+
+.container_grid .content .title_part {
+  color: #777;
+}
+
+.container_grid .content > div {
+  width: 100%;
+}
+
+.container_grid .content .main_title h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.container_grid .content .main_content {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.container_grid .content .main_content .name_member {
+  color: #000;
+  display: flex;
+  gap: 5px;
+}
+
+.container_grid .content .main_content > p {
+  font-size: 20px;
+}
+
+.container_grid .content .main_content > div {
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.container_grid .content .title_part {
+  margin-bottom: 10px;
+}
+
+.container_grid .content .form_newProject {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.container_grid .content .form_newProject input {
+  padding: 10px;
+  width: 55%;
+  border: 1px solid black;
+  border-radius: 5px;
+  outline: none;
+}
+
+.button_one {
+  background-color: #fab207;
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+}
+
+.container_grid .discussion {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+  color: #777;
+  width: 100%;
+  border: 1px solid #00a3ff;
+  border-radius: 5px;
+}
+
+.container_grid .discussion > div:first-child,
+.container_grid .discussion form {
+  padding: 10px;
+}
+
+.container_grid .discussion .head_part {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  background-color: #e2e2e2;
+  border-radius: 5px;
+}
+
+.container_grid .discussion .head_part span {
+  color: black;
+}
+
+.container_grid .discussion .main_discussion {
+  display: grid;
+  grid-template-columns: 3fr 12fr 1fr;
+  justify-items: start;
+  padding: 20px;
+}
+
+.container_grid .discussion .main_discussion .info_message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.container_grid .discussion .main_discussion .info_message span {
+  color: black;
+}
+
+.container_grid .discussion form {
+  background-color: #e2e2e2;
+  border-radius: 5px;
+  padding: 20px !important;
+  width: calc(100% - 40px) !important;
+}
+
+.container_grid .discussion form input {
+  width: -webkit-fill-available !important;
+}
+
+.container_grid .sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+.container_grid .sidebar button {
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+}
+
+.container_grid .sidebar button:first-child {
+  background-color: #30839c;
+  color: #fff;
+}
+
+/* End style Project Page */
+
+/* Start style edit Page */
+
+.edit_page > form {
+  margin-bottom: 20px;
+}
+
+.edit_page input,
+.edit_page textarea {
+  width: 65% !important;
+}
+
+textarea {
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+  outline: none;
+}
+
+.edit_page .membership .form_addmember {
+  width: 100%;
+  display: flex;
+  gap: 30px;
+}
+
+.edit_page .membership .form_addmember input {
+  padding: 10px;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 6px;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  width: 40px;
+  height: 20px;
+  background: #ccc;
+  border-radius: 20px;
+  position: relative;
+  transition: 0.3s;
+}
+
+.slider::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+/* When checked */
+.toggle input:checked + .slider {
+  background: #4f46e5;
+}
+
+.toggle input:checked + .slider::before {
+  transform: translateX(20px);
+}
+
+/* End style edit Page */
+
+/* Start style add project page */
+.container {
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container form {
+  margin-top: 20px;
+  width: 50%;
+}
+
+.container form > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.container form label {
+  color: #777;
+}
+
+.container form input,
+.container form textarea {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.button_two {
+  margin-top: 10px;
+  color: white;
+  padding: 8px 20px;
+  border: none;
+  background-color: #4a4e4f;
+  border-radius: 3px;
+}
+
+/* End style add project page */
