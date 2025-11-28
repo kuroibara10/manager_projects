@@ -38,31 +38,42 @@
                 </div>
                 <div class="topics">
                     <span class="title_part">Add new disscussion :</span>
-                    <form action="" class="form_newProject">
-                        <input type="text" name="" id="">
+                     <form action="/discussion/add" class="form_newProject" method="POST">
+                        <input name="project_id" type="hidden" value="<%= @project["id"] %>"/>
+                        <input name="email" type="hidden" value="<%= @project["email"]%>"/>
+                        <input type="text" name="titel_discussion" id="titel_discussion">
                         <button type="submit" class="button_one"><i class="fa-solid fa-circle-plus"></i>New discussion</button>
                     </form>
+                    <% @discussions.each do |discussion| %>
                     <div class="discussion">
                         <div class="head_part">
-                            <span>discussion</span>
+                            <span><%= discussion["titel_discussion"] %></span>
                             <div class="icons">
                                 <i class="fa-solid fa-gear"></i>
                                 <i class="fa-solid fa-trash-can"></i>
                             </div>
                         </div>
-                        <div class="main_discussion">
-                            <i class="fa-solid fa-comments"></i>
-                            <div class="info_message">
-                                <div class="email">tets@gmail.com</div>
-                                <span>Good!</span>
+                        <% @chat_discussions.each do |chat| %>
+                            <% if chat["discussions_id"] == discussion["id"] %>
+                            <div class="main_discussion">
+                                <i class="fa-solid fa-comments"></i>
+                                <div class="info_message">
+                                    <div class="email"><%= chat["email"] %></div>
+                                    <span><%= chat["message_d"] %>!</span>
+                                </div>
+                                <i class="fa-solid fa-pen-clip"></i>
                             </div>
-                            <i class="fa-solid fa-pen-clip"></i>
-                        </div>
-                        <form action="" class="form_newProject">
-                            <input type="text" name="" id="">
+                            <% end %>
+                        <% end %>
+                        <form action="/discussion/caht/add" class="form_newProject" method="POST">
+                            <input name="project_id" type="hidden" value="<%= @project["id"] %>"/>
+                            <input name="email" type="hidden" value="<%= @project["email"]%>"/>
+                            <input name="discussions_id" type="hidden" value="<%= discussion["id"]%>"/>
+                            <input type="text" name="message_d" id="message_d">
                             <button type="submit" class="button_one">Send</button>
                         </form>
                     </div>
+                    <% end %>
                 </div>
                 <div class="task">
                     <span class="title_part">Add new task :</span>

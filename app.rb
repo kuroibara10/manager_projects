@@ -56,7 +56,7 @@ end
 get '/users/home' do
   content_type :html
   begin
-    @projects = DB.execute("SELECT * FROM projects")
+    @projects = DB.execute("SELECT * FROM projects ORDER BY id DESC")
     erb :"users/home"
   rescue => e
     halt 500, "Failed to load users: #{e.message}"
@@ -67,8 +67,10 @@ get '/project' do
   content_type :html
   id = params[:projectId]
   @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
-  @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ?",[id])
+  @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ? ORDER BY id DESC",[id])
   @members = DB.execute("SELECT * FROM project_collaborations WHERE project_id = ?",[id])
+  @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[id])
+  @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ? ORDER BY id DESC",[id])
   begin
     erb :"users/project"
   rescue => e
@@ -280,3 +282,63 @@ delete "/project/task/:id" do
     redirect "/users/home"
   end
 end
+
+# New Discussion
+post "/discussion/add" do
+  titel_discussion = params[:titel_discussion]
+  email = params[:email]
+  project_id = params[:project_id]
+  @project = DB.execute("SELECT * FROM projects WHERE id = ?",[project_id]).first
+  @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ? ORDER BY id DESC",[project_id])
+  @members = DB.execute("SELECT * FROM project_collaborations WHERE project_id = ?",[project_id])
+  @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ? ORDER BY id DESC",[project_id])
+
+  begin
+    DB.execute(
+      "INSERT INTO discussions (titel_discussion, email, project_id) VALUES (?, ?, ?)",
+      [titel_discussion, email, project_id]
+    )
+    @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
+    session[:projectId] = project_id
+    session[:message] = "Discussion created successfully!"
+    # redirect "/users/home"
+    erb :"users/project"
+  rescue SQLite3::ConstraintException
+    session[:message] = "Error create Discussion: #{e.message}"
+    session[:type] = "error"
+    # redirect "/users/home"
+    erb :"users/project"
+  end
+end
+
+post "/discussion/caht/add" do
+  message_d = params[:message_d]
+  email = params[:email]
+  project_id = params[:project_id]
+  discussions_id = params[:discussions_id]
+  @project = DB.execute("SELECT * FROM projects WHERE id = ?",[project_id]).first
+  @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ? ORDER BY id DESC",[project_id])
+  @members = DB.execute("SELECT * FROM project_collaborations WHERE project_id = ?",[project_id])
+
+  begin
+    DB.execute(
+      "INSERT INTO chat_discussion (message_d, email, project_id, discussions_id) VALUES (?, ?, ?, ?)",
+      [message_d, email, project_id, discussions_id]
+    )
+    @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
+    @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ?",[project_id])
+    session[:projectId] = project_id
+    # session[:message] = "Discussion created successfully!"
+    # redirect "/users/home"
+    erb :"users/project"
+  rescue SQLite3::ConstraintException
+    @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
+    @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ? ORDER BY id DESC",[project_id])
+
+    # session[:message] = "Error create Discussion: #{e.message}"
+    # session[:type] = "error"
+    # redirect "/users/home"
+    erb :"users/project"
+  end
+end
+
