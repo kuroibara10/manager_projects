@@ -55,8 +55,12 @@ get '/login' do
 end
 get '/users/home' do
   content_type :html
+  email = session[:email]
+  @projects = DB.execute("SELECT * FROM projects WHERE email = ? ORDER BY id DESC",[email])
+  @projects_created = DB.execute("SELECT * FROM projects WHERE email = ? ORDER BY id DESC",[email])
+  @projects_shared = DB.execute("SELECT * FROM projects WHERE email = ? ORDER BY id DESC",[email])
   begin
-    @projects = DB.execute("SELECT * FROM projects ORDER BY id DESC")
+    # @projects = DB.execute("SELECT * FROM projects ORDER BY id DESC")
     erb :"users/home"
   rescue => e
     halt 500, "Failed to load users: #{e.message}"
@@ -227,18 +231,25 @@ post "/task/add" do
   task = params[:task]
   project_id = params[:project_id]
   email = params[:email]
+  @project = DB.execute("SELECT * FROM projects WHERE id = ?",[project_id]).first
+  @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ? ORDER BY id DESC",[project_id])
+  @members = DB.execute("SELECT * FROM project_collaborations WHERE project_id = ?",[project_id])
+  @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ? ORDER BY id DESC",[project_id])
+   @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
+
   begin
     DB.execute(
       "INSERT INTO tasks (task, email, project_id) VALUES (?, ?, ?)",
       [task, email, project_id]
     )
     session[:message] = "Task created successfully!"
+
     session[:type] = "success"
-    redirect "/users/home"
+    erb :"users/project"
   rescue SQLite3::ConstraintException
     session[:message] = "Error create Task: #{e.message}"
     session[:type] = "error"
-    redirect "/users/home"
+    erb :"users/project"
   end
 end
 
