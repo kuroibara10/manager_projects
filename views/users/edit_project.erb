@@ -27,25 +27,32 @@
             </div>
             <div class="main_content edit_page">
                 <span class="title_part">Name :</span>
-                <form action="" class="form_newProject">
-                    <input type="text" name="" id="" value="<%= @project["name"] %>">
+                <form action="/project/update/name" method="POST" class="form_newProject">
+                    <input type="hidden" name="_method" value="put">
+                    <input type="hidden" name="id_project" value="<%= @project["id"] %>">
+                    <input type="text" name="new_name" id="" value="<%= @project["name"] %>">
                     <button type="submit" class="button_two">Update Name</button>
                 </form>
                 <span class="title_part">Description :</span>
-                <form action="" class="form_newProject">
-                    <textarea name="Update_description" id=""><%= @project["discription"] %></textarea>
+                <form action="/project/update/discription" method="POST" class="form_newProject">
+                    <input type="hidden" name="_method" value="put">
+                    <input type="hidden" name="id_project" value="<%= @project["id"] %>">
+                    <textarea name="new_description" id=""><%= @project["discription"] %></textarea>
                     <button type="submit" class="button_two">Update Description</button>
                 </form>
                 <div class="membership">
                     <span class="title_part">Add member (email) :</span>
                     <div class="form_addmember">
-                        <input type="text" name="email" id="">
-                        <label class="toggle">
-                            <input type="checkbox">
-                            <span class="slider"></span>
-                            <span class="toggle-label">Admin</span>
-                        </label>
-                        <button type="submit" class="button_one"><i class="fa-solid fa-user-plus"></i></button>
+                        <form action="/project_collaborations/add" class="form_newProject" method="POST">
+                            <input type="text" name="email" id="email">
+                            <input name="project_id" type="hidden" value="<%= @project["id"] %>"/>
+                            <label class="toggle">
+                                <input type="checkbox" name="is_admin">
+                                <span class="slider"></span>
+                                <span class="toggle-label">Admin</span>
+                            </label>
+                            <button type="submit" class="button_one"><i class="fa-solid fa-user-plus"></i></button>
+                        </form>
                     </div>
                 </div>
                 </form>

@@ -171,8 +171,8 @@ post "/project/add" do
     )
     project_id = DB.last_insert_row_id
     DB.execute(
-      "INSERT INTO project_collaborations (project_id, email) VALUES (?, ?)",
-      [project_id, email]
+      "INSERT INTO project_collaborations (project_id, email, is_admin) VALUES (?, ?, ?)",
+      [project_id, email, 1]
     )
     session[:message] = "Project #{name} created successfully!"
     session[:type] = "success"
@@ -185,27 +185,49 @@ post "/project/add" do
 end
 
 # Update Project
-put "/project/:id" do
-  id = params[:id]
-  name = params[:name]
-  discription = params[:discription]
+put "/project/update/name" do
+  id = params[:id_project]
+  name = params[:new_name]
+
   begin
     DB.execute(
-      "UPDATE projects SET name = ?, description = ? WHERE id = ?",
-      [name, description, id]
+      "UPDATE projects SET name = ? WHERE id = ?",
+      [name, id]
     )
+    @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
     @message = "Project update successfully!"
     @type = "success"
 
-
-    erb :sing_up
+    erb :"users/edit_project"
   rescue SQLite3::ConstraintException
     @message = "Project Eroor!"
     @type = "error"
 
-    erb :sing_up
+    erb :"users/edit_project"
   end
 end
+
+put "/project/update/discription" do
+  id = params[:id_project]
+  discription = params[:new_description]
+  begin
+    DB.execute(
+      "UPDATE projects SET discription = ? WHERE id = ?",
+      [discription, id]
+    )
+    @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
+    @message = "Project update successfully!"
+    @type = "success"
+
+    erb :"users/edit_project"
+  rescue SQLite3::ConstraintException
+    @message = "Project Eroor!"
+    @type = "error"
+
+    erb :"users/edit_project"
+  end
+end
+
 
 # Delete Project
 delete "/users/home/:id" do
@@ -235,7 +257,7 @@ post "/task/add" do
   @tasks = DB.execute("SELECT * FROM tasks WHERE project_id = ? ORDER BY id DESC",[project_id])
   @members = DB.execute("SELECT * FROM project_collaborations WHERE project_id = ?",[project_id])
   @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ? ORDER BY id DESC",[project_id])
-   @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
+  @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
 
   begin
     DB.execute(
@@ -322,7 +344,7 @@ post "/discussion/add" do
   end
 end
 
-post "/discussion/caht/add" do
+post "/discussion/chat/add" do
   message_d = params[:message_d]
   email = params[:email]
   project_id = params[:project_id]
@@ -353,3 +375,30 @@ post "/discussion/caht/add" do
   end
 end
 
+post "/project_collaborations/add" do
+  project_id = params[:project_id]
+  email = params[:email]
+  is_admin = params[:is_admin] ? 1 : 0
+  @project = DB.execute("SELECT * FROM projects WHERE id = ?",[project_id]).first
+  sumuser = DB.execute("SELECT COUNT(*) AS total FROM project_collaborations WHERE project_id = ?",[project_id])
+  newsum = sumuser[0]["total"] + 1
+  begin
+    DB.execute(
+      "INSERT INTO project_collaborations (project_id, email, is_admin) VALUES (?, ?, ?)",
+      [project_id, email, project_id]
+    )
+    DB.execute(
+      "UPDATE projects SET members_users = ? WHERE id = ?",
+      [newsum, project_id]
+    )
+
+    session[:message] = "Add new user successfully!"
+
+    session[:type] = "success"
+    erb :"users/edit_project"
+  rescue SQLite3::ConstraintException
+    session[:message] = "Error Add new user: #{e.message}"
+    session[:type] = "error"
+    erb :"users/edit_project"
+  end
+end
