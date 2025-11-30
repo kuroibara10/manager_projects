@@ -66,9 +66,6 @@
         border:1px solid black;
         width:300px
     }
-
-    /* .projects div div div div{
-    } */
     .tiltelpp{
         background-color:#000;
         color:#fff;
@@ -92,6 +89,7 @@
                 <li class="icon-header" style="color: #9484b2;"><i class="fa-solid fa-right-from-bracket"></i><a href="/logout" style="text-decoration: none; color: #9484b2;">Log Out</a></li>
             </ul>
         </div>
+        <h1 class="head-home">Welcome <%= session[:username] %></h1>
         <h1 class="head-home">Projects</h1>
         <% if session[:message] %>
             <div id="alert-message" style="padding: 10px; border-radius:5px; margin-bottom:10px; margin-top:10px;  
@@ -119,11 +117,15 @@
                             <div class="tiltelpp">
                                 <div>
                                     <h2><%= project["name"] %></h2>
+                                    <form action="/project" method="GET">
+                                        <input type="hidden" name="projectId" value="<%= project["id"] %>">
+                                        <button type="submit" style="border:none; background-color:#000; cursor:pointer" ><i class="fa-solid fa-gear" style="color: #fff;font-size:20px" ></i></button>
+                                    </form>
                                 </div>
                                 <p><i class="fa-solid fa-pen-clip"></i><%= project["email"] %></p>
                             </div>
                             <div style="padding: 10px;">
-                                <%= project["discription"] %>
+                                <%= project["description"] %>
                             </div>
                             <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
                                 <div style="display: flex;flex-direction: row; justify-content: space-between;">
@@ -139,8 +141,8 @@
             </div>
             <div>
                 <h3><i class="fa-solid fa-plus"></i> Created by me</h3>
-                <% if @projects && @projects.any? %>
-                    <% @projects.each do |project| %>
+                <% if @projects_created && @projects_created.any? %>
+                    <% @projects_created.each do |project| %>
                         <div class="project" style="text-align: left;">
                             <div class="tiltelpp">
                                 <div>
@@ -153,7 +155,7 @@
                                 <p><i class="fa-solid fa-pen-clip"></i><%= project["email"] %></p>
                             </div>
                             <div style="padding: 10px;">
-                                <%= project["discription"] %>
+                                <%= project["description"] %>
                             </div>
                             <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
                                 <div style="display: flex;flex-direction: row; justify-content: space-between;">
@@ -175,18 +177,21 @@
             </div>
             <div>
                 <h3><i class="fa-solid fa-users"></i> Shared with me</h3>
-                <% if @projects && @projects.any? %>
-                    <% @projects.each do |project| %>
+                <% if @projects_shared && @projects_shared.any? %>
+                    <% @projects_shared.each do |project| %>
                         <div class="project" style="text-align: left;">
                             <div class="tiltelpp">
                                 <div>
                                     <h2><%= project["name"] %></h2>
-                                    <i class="fa-solid fa-gear"></i>
+                                    <form action="/project" method="GET">
+                                        <input type="hidden" name="projectId" value="<%= project["id"] %>">
+                                        <button type="submit" style="border:none; background-color:#000; cursor:pointer" ><i class="fa-solid fa-gear" style="color: #fff;font-size:20px" ></i></button>
+                                    </form>
                                 </div>
                                 <p><i class="fa-solid fa-pen-clip"></i><%= project["email"] %></p>
                             </div>
                             <div style="padding: 10px;">
-                                <%= project["discription"] %>
+                                <%= project["description"] %>
                             </div>
                             <div style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding:10px">
                                 <div style="display: flex;flex-direction: row; justify-content: space-between;">

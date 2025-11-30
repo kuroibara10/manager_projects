@@ -31,7 +31,7 @@
                     <span class="title_part">Members : <%= @project["members_users"] %></span>
                     <div>
                         <% @members.each do |member| %>
-                            <span class="name_member"><i class="fa-solid fa-pen-clip"></i><%= member["email"] %></span>
+                            <span class="name_member"><i class="fa-solid fa-pen-clip"></i><%= member["email"] %> : <% if member["is_admin"] == 0 %> User <% else %> Admin <% end %></span>
                         <% end %>
                     </div>
 

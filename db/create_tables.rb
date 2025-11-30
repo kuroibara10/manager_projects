@@ -1,6 +1,6 @@
 require 'sqlite3'
 DB = SQLite3::Database.new "myBasecamp1.db"
-# DB.execute("DROP TABLE IF EXISTS projects")
+# DB.execute("DROP TABLE IF EXISTS users")
 DB.execute <<-SQL
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -9,18 +9,30 @@ DB.execute <<-SQL
     password TEXT
   );
 SQL
+# DB.execute("DROP TABLE IF EXISTS projects")
 DB.execute <<-SQL
   CREATE TABLE IF NOT EXISTS projects (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     email TEXT,
-    discription TEXT,
+    description TEXT,
     members_users INTEGER DEFAULT 1,
     nb_discussion INTEGER DEFAULT 0
   );
 SQL
-# DB.execute("DROP TABLE IF EXISTS discussions")
 
+# DB.execute("DROP TABLE IF EXISTS project_collaborations")
+DB.execute <<-SQL
+CREATE TABLE IF NOT EXISTS project_collaborations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    creator TEXT,
+    project_id INTEGER,
+    email TEXT,
+    is_admin INTEGER,
+    FOREIGN KEY(project_id) REFERENCES projects(id)
+);
+SQL
+# DB.execute("DROP TABLE IF EXISTS discussions")
 DB.execute <<-SQL
   CREATE TABLE IF NOT EXISTS discussions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +42,7 @@ DB.execute <<-SQL
     FOREIGN KEY(project_id) REFERENCES projects(id)
   );
 SQL
-
+# DB.execute("DROP TABLE IF EXISTS tasks")
 DB.execute <<-SQL
   CREATE TABLE IF NOT EXISTS tasks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,16 +52,7 @@ DB.execute <<-SQL
     FOREIGN KEY(project_id) REFERENCES projects(id)
   );
 SQL
-DB.execute("DROP TABLE IF EXISTS project_collaborations")
-DB.execute <<-SQL
-CREATE TABLE IF NOT EXISTS project_collaborations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    project_id INTEGER,
-    email TEXT,
-    is_admin INTEGER,
-    FOREIGN KEY(project_id) REFERENCES projects(id)
-);
-SQL
+
 # DB.execute("DROP TABLE IF EXISTS chat_discussion")
 DB.execute <<-SQL
   CREATE TABLE IF NOT EXISTS chat_discussion (

@@ -34,10 +34,10 @@
                     <button type="submit" class="button_two">Update Name</button>
                 </form>
                 <span class="title_part">Description :</span>
-                <form action="/project/update/discription" method="POST" class="form_newProject">
+                <form action="/project/update/description" method="POST" class="form_newProject">
                     <input type="hidden" name="_method" value="put">
                     <input type="hidden" name="id_project" value="<%= @project["id"] %>">
-                    <textarea name="new_description" id=""><%= @project["discription"] %></textarea>
+                    <textarea name="new_description" id=""><%= @project["description"] %></textarea>
                     <button type="submit" class="button_two">Update Description</button>
                 </form>
                 <div class="membership">
@@ -46,6 +46,7 @@
                         <form action="/project_collaborations/add" class="form_newProject" method="POST">
                             <input type="text" name="email" id="email">
                             <input name="project_id" type="hidden" value="<%= @project["id"] %>"/>
+                            <input name="creator" type="hidden" value="<%= @project["email"]%>"/>
                             <label class="toggle">
                                 <input type="checkbox" name="is_admin">
                                 <span class="slider"></span>

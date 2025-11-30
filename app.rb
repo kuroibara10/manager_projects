@@ -56,11 +56,20 @@ end
 get '/users/home' do
   content_type :html
   email = session[:email]
-  @projects = DB.execute("SELECT * FROM projects WHERE email = ? ORDER BY id DESC",[email])
+  @projects = DB.execute("SELECT p.id AS id, p.name AS name, p.email AS email, p.description AS description, p.members_users AS members_users, p.nb_discussion AS nb_discussion 
+  FROM projects p
+  INNER JOIN project_collaborations pc ON pc.project_id = p.id WHERE pc.email = ?;
+  ORDER BY id DESC",[email])
+
   @projects_created = DB.execute("SELECT * FROM projects WHERE email = ? ORDER BY id DESC",[email])
-  @projects_shared = DB.execute("SELECT * FROM projects WHERE email = ? ORDER BY id DESC",[email])
+
+  @projects_shared = DB.execute("SELECT p.id AS id, p.name AS name, p.email AS email, p.description AS description, p.members_users AS members_users, p.nb_discussion AS nb_discussion 
+  FROM projects p
+  INNER JOIN project_collaborations pc ON pc.project_id = p.id WHERE pc.email = ? AND pc.creator != ?;
+  ORDER BY id DESC",[email,email])
+
+
   begin
-    # @projects = DB.execute("SELECT * FROM projects ORDER BY id DESC")
     erb :"users/home"
   rescue => e
     halt 500, "Failed to load users: #{e.message}"
@@ -146,6 +155,7 @@ post "/login" do
   if BCrypt::Password.new(user["password"]) == password
     session[:user_id] = user["id"]
     session[:email] = user["email"]
+    session[:username] = user["username"]
     redirect "/users/home"
   else
     session[:message] = "Incorrect password!"
@@ -162,17 +172,17 @@ end
 # New Project
 post "/project/add" do
   name = params[:name]
-  discription = params[:discription]
+  description = params[:description]
   email = params[:email]
   begin
     DB.execute(
-      "INSERT INTO projects (name, discription, email) VALUES (?, ?, ?)",
-      [name, discription, email]
+      "INSERT INTO projects (name, description, email) VALUES (?, ?, ?)",
+      [name, description, email]
     )
     project_id = DB.last_insert_row_id
     DB.execute(
-      "INSERT INTO project_collaborations (project_id, email, is_admin) VALUES (?, ?, ?)",
-      [project_id, email, 1]
+      "INSERT INTO project_collaborations (creator, project_id, email, is_admin) VALUES (?, ?, ?, ?)",
+      [email, project_id, email, 1]
     )
     session[:message] = "Project #{name} created successfully!"
     session[:type] = "success"
@@ -207,13 +217,13 @@ put "/project/update/name" do
   end
 end
 
-put "/project/update/discription" do
+put "/project/update/description" do
   id = params[:id_project]
-  discription = params[:new_description]
+  description = params[:new_description]
   begin
     DB.execute(
-      "UPDATE projects SET discription = ? WHERE id = ?",
-      [discription, id]
+      "UPDATE projects SET description = ? WHERE id = ?",
+      [description, id]
     )
     @project = DB.execute("SELECT * FROM projects WHERE id = ?",[id]).first
     @message = "Project update successfully!"
@@ -334,12 +344,10 @@ post "/discussion/add" do
     @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
     session[:projectId] = project_id
     session[:message] = "Discussion created successfully!"
-    # redirect "/users/home"
     erb :"users/project"
   rescue SQLite3::ConstraintException
     session[:message] = "Error create Discussion: #{e.message}"
     session[:type] = "error"
-    # redirect "/users/home"
     erb :"users/project"
   end
 end
@@ -361,16 +369,11 @@ post "/discussion/chat/add" do
     @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
     @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ?",[project_id])
     session[:projectId] = project_id
-    # session[:message] = "Discussion created successfully!"
-    # redirect "/users/home"
     erb :"users/project"
   rescue SQLite3::ConstraintException
     @discussions = DB.execute("SELECT * FROM discussions WHERE project_id = ? ORDER BY id DESC",[project_id])
     @chat_discussions = DB.execute("SELECT * FROM chat_discussion WHERE project_id = ? ORDER BY id DESC",[project_id])
 
-    # session[:message] = "Error create Discussion: #{e.message}"
-    # session[:type] = "error"
-    # redirect "/users/home"
     erb :"users/project"
   end
 end
@@ -378,14 +381,15 @@ end
 post "/project_collaborations/add" do
   project_id = params[:project_id]
   email = params[:email]
+  creator =params[:creator]
   is_admin = params[:is_admin] ? 1 : 0
   @project = DB.execute("SELECT * FROM projects WHERE id = ?",[project_id]).first
   sumuser = DB.execute("SELECT COUNT(*) AS total FROM project_collaborations WHERE project_id = ?",[project_id])
   newsum = sumuser[0]["total"] + 1
   begin
     DB.execute(
-      "INSERT INTO project_collaborations (project_id, email, is_admin) VALUES (?, ?, ?)",
-      [project_id, email, project_id]
+      "INSERT INTO project_collaborations (creator, project_id, email, is_admin) VALUES (?, ?, ?, ?)",
+      [creator, project_id, email, is_admin]
     )
     DB.execute(
       "UPDATE projects SET members_users = ? WHERE id = ?",
